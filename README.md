@@ -2,6 +2,8 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/50314/83684793-a2f74880-a5b5-11ea-8b3b-c01f6a50f5e2.jpg)
 
+`jlf` is a simple formatter that takes streams of JSON, formatting is a readable table. For example, the above screenshot is a rendering of [this](https://gist.github.com/atombender/64bf082b49bbd0abd3265d2a77374330) data.
+
 ## Installation
 
 Git clone and then `go install .` (requires Go >= 1.13).
