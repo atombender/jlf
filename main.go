@@ -71,10 +71,17 @@ func formatStream(opts options, r io.Reader) {
 		}
 	}
 
+	mainIdx := len(opts.Columns) - 1
+	for i, c := range opts.Columns {
+		if c.rest {
+			mainIdx = i
+			break
+		}
+	}
+
 	restRowCols := make([]column, len(opts.Columns))
 	copy(restRowCols, opts.Columns)
-	restRowCols[len(restRowCols)-1].colorFunc = color.CyanString
-	restRowCols[len(restRowCols)-1].indent = 2
+	restRowCols[mainIdx].colorFunc = color.CyanString
 
 	buf := bufio.NewReader(r)
 	for {
@@ -138,7 +145,7 @@ func formatStream(opts options, r io.Reader) {
 				for i := range kcv {
 					kcv[i] = ""
 				}
-				kcv[len(kcv)-1] = fmt.Sprintf("%s: %s", k, opts.Columns[len(opts.Columns)-1].parseString(v))
+				kcv[mainIdx] = fmt.Sprintf("  %s: %s", k, opts.Columns[len(opts.Columns)-1].parseString(v))
 				printRow(kcv, restRowCols)
 			}
 		}
@@ -267,14 +274,11 @@ type colorFunc func(format string, a ...interface{}) string
 type column struct {
 	field     string
 	width     int
-	indent    int
 	colorFunc colorFunc
+	rest      bool
 }
 
 func (c *column) format(s string) string {
-	for i := 1; i <= c.indent; i++ {
-		s = " " + s
-	}
 	return c.colorFunc(s)
 }
 
@@ -288,7 +292,7 @@ func (c *column) parseString(v interface{}) string {
 	return fmt.Sprintf("%v", v)
 }
 
-var specRegexp = regexp.MustCompile(`([^:]+)(?::(\d*))?(?::([^:]+))?`)
+var specRegexp = regexp.MustCompile(`([^:]+)(?::(\d*))?(?::([^:]+))?(?::(r))?`)
 
 func (c *column) UnmarshalFlag(value string) error {
 	m := specRegexp.FindStringSubmatch(value)
@@ -297,6 +301,7 @@ func (c *column) UnmarshalFlag(value string) error {
 	}
 
 	c.field = m[1]
+
 	if len(m) >= 3 {
 		if len(m[2]) > 0 {
 			length, err := strconv.Atoi(m[2])
@@ -309,6 +314,7 @@ func (c *column) UnmarshalFlag(value string) error {
 			c.width = length
 		}
 	}
+
 	if len(m) >= 4 {
 		cf, err := colorFuncFromStr(m[3])
 		if err != nil {

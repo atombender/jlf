@@ -20,8 +20,9 @@ You can invoke `jlf` with one or more file names, or simply pipe to it. Other fl
 One or more columns must be specified. Each column has this format:
 
 ```
---column=myField:100:blue
-         |       |   |
+--column=myField:100:blue:r
+         |       |   |    |
+         |       |   |    extra options (see below)
          |       |   |
   field name     |   color
                  |   (blank means default)
@@ -36,6 +37,7 @@ Some examples:
 * `--column=myField:100`
 * `--column=myField::blue`
 * `--column=myField:100:blue`
+* `--column=myField:100:blue:r`
 
 Specifying one or more columns without a width will try fill up the full terminal width evenly.
 
@@ -46,7 +48,11 @@ field1: foo
 field2: bar
 ```
 
-## Colors
+#### Column options
+
+* `r`: If `--include-rest`, merge rest of fields into this column.
+
+#### Colors
 
 * `black`
 * `red`
