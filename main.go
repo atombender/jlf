@@ -108,6 +108,7 @@ func formatStream(opts options, r io.Reader) {
 				cell = sb.String()
 			} else if v, ok := entry[c.field]; ok {
 				cell = v
+				delete(entry, c.field)
 			} else {
 				cell = ""
 			}
