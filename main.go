@@ -18,8 +18,9 @@ import (
 )
 
 type options struct {
-	Columns     []column `short:"c" long:"column" description:"Columns to print." value-name:"NAME[:LENGTH[:COLOR]]" multiple:"true"`
-	IncludeRest bool     `short:"i" long:"include-rest" description:"Devote the last column to rest of fields that don't have columns."`
+	Columns      []column `short:"c" long:"column" description:"Columns to print." value-name:"NAME[:LENGTH[:COLOR]]" multiple:"true"`
+	IncludeRest  bool     `short:"i" long:"include-rest" description:"Devote the last column to rest of fields that don't have columns."`
+	DefaultColor string   `short:"C" long:"default-color" description:"Default color for text."`
 }
 
 func main() {
@@ -39,6 +40,10 @@ func main() {
 
 	if len(opts.Columns) == 0 {
 		fatal(errors.New("no columns specified"))
+	}
+
+	if opts.DefaultColor == "" {
+		opts.DefaultColor = "hiblue"
 	}
 
 	if len(args) == 0 {
@@ -79,9 +84,14 @@ func formatStream(opts options, r io.Reader) {
 		}
 	}
 
+	defaultColorFunc, err := colorFuncFromStr(opts.DefaultColor)
+	if err != nil {
+		fatal(err)
+	}
+
 	restRowCols := make([]column, len(opts.Columns))
 	copy(restRowCols, opts.Columns)
-	restRowCols[mainIdx].colorFunc = color.CyanString
+	restRowCols[mainIdx].colorFunc = defaultColorFunc
 
 	buf := bufio.NewReader(r)
 	for {
