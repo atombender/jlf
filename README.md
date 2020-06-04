@@ -1,8 +1,8 @@
 # jlf — a basic JSON line formatter
 
-![Screenshot](https://user-images.githubusercontent.com/50314/83684793-a2f74880-a5b5-11ea-8b3b-c01f6a50f5e2.jpg)
+![Screenshot](https://user-images.githubusercontent.com/50314/83770876-9de6d780-a64f-11ea-9242-0b1e32fa47b8.jpg)
 
-`jlf` is a simple formatter that takes streams of JSON, formatting is a readable table. For example, the above screenshot is a rendering of [this](https://gist.github.com/atombender/64bf082b49bbd0abd3265d2a77374330) data.
+`jlf` is a simple formatter that takes streams of JSON, formatting is a readable table. For example, the above screenshot is a rendering of [this](https://gist.github.com/atombender/0868a9c1638ab3bb979b5b9a06807a11) data.
 
 ## Installation
 
