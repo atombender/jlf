@@ -76,11 +76,19 @@ func formatStream(opts options, r io.Reader) {
 	restRowCols[len(restRowCols)-1].colorFunc = color.CyanString
 	restRowCols[len(restRowCols)-1].indent = 2
 
-	scanner := bufio.NewScanner(r)
-	for scanner.Scan() {
+	buf := bufio.NewReader(r)
+	for {
+		b, err := buf.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			fatal(err)
+		}
 		var entry map[string]interface{}
-		if err := json.Unmarshal([]byte(scanner.Text()), &entry); err != nil {
-			logError(err)
+
+		if err := json.Unmarshal([]byte(b), &entry); err != nil {
+			logError(fmt.Errorf("could not parse line as JSON: %w", err))
 			continue
 		}
 
