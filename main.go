@@ -95,7 +95,7 @@ func formatStream(opts options, r io.Reader) {
 		var entry map[string]interface{}
 
 		if err := json.Unmarshal([]byte(b), &entry); err != nil {
-			logError(fmt.Errorf("could not parse line as JSON: %w", err))
+			logError(fmt.Errorf("could not parse line as JSON: %w: %s", err, string(b)))
 			continue
 		}
 
@@ -322,11 +322,17 @@ func (c *column) UnmarshalFlag(value string) error {
 		}
 		c.colorFunc = cf
 	}
+
+	if len(m) >= 5 {
+		if strings.Contains(m[4], "r") {
+			c.rest = true
+		}
+	}
 	return nil
 }
 
 func logError(err error) {
-	s := color.RedString("Error: "+err.Error()) + "\n"
+	s := color.RedString("[Error] "+err.Error()) + "\n"
 	_, _ = os.Stderr.Write([]byte(s))
 }
 
