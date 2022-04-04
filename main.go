@@ -289,7 +289,10 @@ type column struct {
 }
 
 func (c *column) format(s string) string {
-	return c.colorFunc(s)
+	if c.colorFunc != nil {
+		return c.colorFunc(s)
+	}
+	return s
 }
 
 func (c *column) parseString(v interface{}) string {
@@ -325,7 +328,7 @@ func (c *column) UnmarshalFlag(value string) error {
 		}
 	}
 
-	if len(m) >= 4 {
+	if len(m) >= 4 && len(m[3]) > 0 {
 		cf, err := colorFuncFromStr(m[3])
 		if err != nil {
 			return err
