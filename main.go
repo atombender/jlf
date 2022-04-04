@@ -191,8 +191,8 @@ func printRow(row []interface{}, cols []column) {
 	li := 0
 	for {
 		var (
-			any   bool
-			cells []string
+			foundAny bool
+			cells    []string
 		)
 		for i, value := range row {
 			col := cols[i]
@@ -209,7 +209,7 @@ func printRow(row []interface{}, cols []column) {
 			ls := strings.Split(str, "\n")
 			if len(ls) > li {
 				cell = ls[li]
-				any = true
+				foundAny = true
 			} else {
 				cell = ""
 			}
@@ -218,7 +218,7 @@ func printRow(row []interface{}, cols []column) {
 
 			cells = append(cells, cell)
 		}
-		if !any {
+		if !foundAny {
 			break
 		}
 
