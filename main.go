@@ -105,7 +105,7 @@ func formatStream(opts options, r io.Reader) {
 		var entry map[string]interface{}
 
 		if err := json.Unmarshal([]byte(b), &entry); err != nil {
-			logError(fmt.Errorf("could not parse line as JSON: %w: %s", err, string(b)))
+			logError(fmt.Errorf("could not parse line as JSON: %w: %s", err, b))
 			continue
 		}
 
